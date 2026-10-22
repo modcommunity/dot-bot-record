@@ -1,0 +1,22 @@
+# Godot 4
+.godot/
+/android/
+
+# dot-core is a separate repository. For local development, symlink it:
+#   ln -s ../../dot-core/addons/dot_core addons/dot_core
+# Consumers copy both addons into their own project.
+/addons/dot_core
+# Optional, for the SQL store's section of the suite (dot-sql, and godot-sqlite from its tools/fetch_sqlite.sh).
+/addons/dot_sql
+/addons/godot-sqlite
+
+# Exports
+build/
+export_presets.cfg
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
