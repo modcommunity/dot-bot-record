@@ -33,7 +33,7 @@ func load(map_id: String, map_version: String, kind: String, key: String, limit:
 	for e: DotBotDemoEpisode in episodes:
 		if e.map_id == map_id and e.map_version == map_version and e.kind == kind and e.key == key:
 			found.append(e)
-	found.sort_custom(DotBotDemoStoreMemory._better)
+	found.sort_custom(_better)
 	if limit > 0 and found.size() > limit:
 		found.resize(limit)
 	return DotResult.success(found)

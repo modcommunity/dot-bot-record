@@ -70,7 +70,7 @@ func load(map_id: String, map_version: String, kind: String, key: String, limit:
 	for e: DotBotDemoEpisode in loaded.value:
 		if e.map_id == map_id and e.map_version == map_version and e.key == key:
 			found.append(e)
-	found.sort_custom(DotBotDemoStoreJson._better)
+	found.sort_custom(_better)
 	if limit > 0 and found.size() > limit:
 		found.resize(limit)
 	return DotResult.success(found)

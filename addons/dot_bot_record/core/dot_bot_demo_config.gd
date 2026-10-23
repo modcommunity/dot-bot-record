@@ -118,10 +118,10 @@ func describe_lines(redact_sensitive: bool = true) -> PackedStringArray:
 func _validator(key: String) -> Callable:
 	match key:
 		"record":
-			return DotBotDemoConfig._valid_bool
+			return _valid_bool
 		"kinds", "store", "path", "url":
-			return DotBotDemoConfig._valid_text
-	return DotBotDemoConfig._valid_number
+			return _valid_text
+	return _valid_number
 
 
 static func _valid_bool(value: String) -> DotResult:

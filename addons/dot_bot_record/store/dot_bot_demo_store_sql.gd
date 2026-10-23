@@ -111,7 +111,7 @@ func load(map_id: String, map_version: String, kind: String, key: String, limit:
 		return res
 	var out: Array = []
 	for row: Dictionary in res.value:
-		out.append(DotBotDemoStoreSql._episode(row))
+		out.append(_episode(row))
 	return DotResult.success(out)
 
 
