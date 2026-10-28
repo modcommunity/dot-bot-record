@@ -7,7 +7,7 @@ extends Node
 const CHECKS := 96
 
 ## Of CHECKS, the ones that need dot-sql and the SQLite extension linked into this project.
-const SQL_CHECKS := 13
+const SQL_CHECKS := 14
 
 ## Sections entered against sections that ran to their last line.
 const SECTIONS := 7
