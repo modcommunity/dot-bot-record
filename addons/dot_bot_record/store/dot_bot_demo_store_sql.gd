@@ -2,10 +2,7 @@ class_name DotBotDemoStoreSql
 extends DotBotDemoStore
 
 ## Episodes in a database through a dot-sql driver, held untyped so dot-bot-record does not need dot-sql.
-##
-## The driver is anything with query, execute, batch, migrate and is_open (dot-sql's SQLite
-## driver, or its HTTP gateway for PostgreSQL and MySQL). The column is [code]edge_key[/code]
-## because [code]key[/code] is reserved in one dialect.
+## The column is [code]edge_key[/code] because [code]key[/code] is reserved in one dialect.
 
 const CHANNEL := "bot.demo.store"
 const COMPONENT := "dot-bot:demos"

@@ -3,8 +3,7 @@ extends RefCounted
 
 ## What one kind of episode records: a name, a version and two ordered field lists, each field a name, a size and a scale.
 ##
-## The host declares it; dot-bot-record knows nothing of bodies or buttons. The id is a hash of the
-## fields, so a game that changes what it records starts a new set instead of mixing two.
+## The host declares it. The id hashes the fields, so changing what is recorded starts a new set.
 
 ## Field row columns.
 const COL_NAME := 0

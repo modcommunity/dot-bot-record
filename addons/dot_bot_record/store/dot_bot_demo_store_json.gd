@@ -2,10 +2,7 @@ class_name DotBotDemoStoreJson
 extends DotBotDemoStore
 
 ## Episodes in JSON files, one per map version and kind: [code]<path>/<map_id>@<version>/<kind>.json[/code].
-##
-## Each file is held whole in memory and rewritten whole, atomically, only when an append or a
-## mark changed it. A file that will not parse is moved aside to [code].corrupt[/code] and
-## started again, so a torn disk never stops the recorder. The offline tools write the same files.
+## A file that will not parse is moved aside to [code].corrupt[/code], so a torn disk never stops the recorder.
 
 const CHANNEL := "bot.demo.store"
 const FORMAT := 1

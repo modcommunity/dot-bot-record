@@ -3,8 +3,7 @@ extends DotConfig
 
 ## The recorder's settings: exported defaults < JSON file < environment < command line, and the bot_record* cvars.
 ##
-## On by default, server-wide only. [code]bot_record 0[/code] (or [code]record: false[/code])
-## switches it off; there is no per-player switch because nothing identifying is kept.
+## On by default, server-wide only: no per-player switch, because nothing identifying is kept.
 
 const STORES: Array[String] = ["json", "sqlite", "postgres", "mysql", "memory", "off"]
 

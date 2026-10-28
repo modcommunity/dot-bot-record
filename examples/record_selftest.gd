@@ -2,9 +2,7 @@ extends Node
 
 ## dot-bot-record's suite: the schema, the adaptive rate, the recorder, the batching, the three stores and the off switch.
 ##
-## [codeblock]
-## godot --headless --path . res://examples/record_selftest.tscn
-## [/codeblock]
+## Run: godot --headless --path . res://examples/record_selftest.tscn
 
 const CHECKS := 96
 
@@ -513,10 +511,8 @@ func _test_demo_off_and_privacy() -> void:
 	_done()
 
 
-# --- Ride harvest -------------------------------------------------------------------
-# The simulator and the host are toys: a point that accelerates along x. DotFpsSimulator lives in
-# dot-player-controller, which this suite does not link, so the harvest is tested through the
-# duck-typed interface it documents; game-arena's suite runs it on the real motor.
+# Toy simulator and host: dot-player-controller is not linked here, so the harvest is tested
+# through its duck-typed interface; game-arena's suite runs the real motor.
 
 
 func _section(title: String) -> void:

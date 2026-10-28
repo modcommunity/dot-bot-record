@@ -3,12 +3,7 @@ extends RefCounted
 
 ## Records what players do on the server as episodes in a schema the host declares, for bots to learn from.
 ##
-## [b]The host says what an episode is[/b] ([method begin], [method sample], [method end],
-## [method cancel]); the recorder only decides what to keep. [b]Never on a client[/b]:
-## without [member is_server] it is a no-op. [b]Never a name or id[/b]: a subject is any
-## value the host likes, mapped to an in-memory counter that is not written. The sample rate
-## falls as a key's verified count rises ([method rate_for]), and finished episodes leave the
-## tick through a queue that [method process] writes within a time budget.
+## Server only; subjects map to an in-memory counter, never a name or id.
 
 const CHANNEL := "dot.bot.demo"
 
