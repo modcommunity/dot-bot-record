@@ -4,7 +4,6 @@ extends DotBotDemoStore
 ## Episodes in a database through a dot-sql driver, held untyped so dot-bot-record does not need dot-sql.
 ## The column is [code]edge_key[/code] because [code]key[/code] is reserved in one dialect.
 
-const CHANNEL := "bot.demo.store"
 const COMPONENT := "dot-bot:demos"
 const TABLE := "dot_bot_demos"
 const COLUMNS := "id, map_id, map_version, schema_id, kind, edge_key, day, rate, frame_size, outcome, verified, score, start, ticks"
