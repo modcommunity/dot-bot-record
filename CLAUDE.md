@@ -19,6 +19,7 @@ Read the family [CLAUDE.md](../../CLAUDE.md) first; this file is only what is sp
 | `addons/dot_bot_record/core/` | `DotBotDemoSchema` (host-declared fields), `DotBotDemoEpisode`, `DotBotDemoRecorder` (begin/sample/end/cancel, adaptive rate, queue, budgeted writes via `process`), `DotBotDemoConfig` (`bot_record*`, ON by default) |
 | `addons/dot_bot_record/store/` | `DotBotDemoStore` (base, `from_config`), `DotBotDemoStoreMemory`, `DotBotDemoStoreJson`, `DotBotDemoStoreSql` |
 | `examples/record_selftest.tscn` | the suite |
+| `examples/record_live.tscn`, `tools/test_live.sh` | the SQL store against a real database through the dot-sql gateway (SQLite and the extension here; PostgreSQL and MariaDB when `DOT_SQL_PG_DSN` / `DOT_SQL_MYSQL_DSN` are set) |
 
 ## Rules that bite
 
