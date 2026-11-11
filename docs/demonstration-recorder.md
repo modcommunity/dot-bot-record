@@ -81,14 +81,14 @@ One interface, `DotBotDemoStore` (`RefCounted`, every method returns `DotResult`
 | `describe_lines()` | |
 
 - `DotBotDemoStoreJson`, the default: one file per map version and kind, `<path>/<map_id>@<version>/<kind>.json`, written whole from the store's in-memory copy (a ride file is kilobytes to a few megabytes). The offline tools write the same files, so a seeded map and a recorded one are read the same way. A game's planned cache (`maps/surf/<id>.surf.json`) stays where it is and is the seed; the recorded file sits beside it in `user://`.
-- `DotBotDemoStoreSql`: an untyped driver (`query`, `execute`, `batch`, `migrate`), migration component `dot-bot:demos`, one table `dot_bot_demos` (id, map_id, map_version, schema_id, kind, edge_key, day, rate, outcome, verified, score, start as JSON text, ticks as base64 of the float bytes). `key` is a reserved word in one of the three dialects, so the column is `edge_key`. `DotBotDemoStore.from_config(config, host)` loads `res://addons/dot_sql/core/dot_sql.gd` by path, the way game-g2gfast's records store does, so dot-bot never names a `DotSql*` class; without dot-sql installed a database setting is said at ERROR and the JSON store is used.
+- `DotBotDemoStoreSql`: an untyped driver (`query`, `execute`, `batch`, `migrate`), migration component `dot-bot:demos`, one table `dot_bot_demos` (id, map_id, map_version, schema_id, kind, edge_key, day, rate, outcome, verified, score, start as JSON text, ticks as base64 of the float bytes). `key` is a reserved word in one of the three dialects, so the column is `edge_key`. `DotBotDemoStore.from_config(config, host)` loads `res://addons/dot_sql/core/dot_sql.gd` by path, the way game-airdrift's records store does, so dot-bot never names a `DotSql*` class; without dot-sql installed a database setting is said at ERROR and the JSON store is used.
 - `DotBotDemoStoreMemory` for suites.
 
 ## The first consumer: surf rides
 
 ### Recording a ride
 
-The game (game-arena's `arena_surf.gd`) declares the `ride` schema: observation `position` (3), `velocity` (3); action `yaw`, `move` (2), `jump`. A ride begins when a player who stood on an island (`DotBotNav.island_at`) is in the air above no island, with the full motor state as `start`; it ends `landed` when they stand on another island (the key becomes `"from>to"`), and is cancelled by a teleport, a death or a fall onto a teleport floor. A ride back onto its own island is not kept.
+The game (game-fatal-contact's `arena_surf.gd`) declares the `ride` schema: observation `position` (3), `velocity` (3); action `yaw`, `move` (2), `jump`. A ride begins when a player who stood on an island (`DotBotNav.island_at`) is in the air above no island, with the full motor state as `start`; it ends `landed` when they stand on another island (the key becomes `"from>to"`), and is cancelled by a teleport, a death or a fall onto a teleport floor. A ride back onto its own island is not kept.
 
 ### Verifying it
 
@@ -114,7 +114,7 @@ A game's `tools/surf_rides.tscn` keeps `--explore`, `--plan` and `--measure`, an
 
 ### Where the code lives
 
-| dot-bot (nothing surf- or game-specific beyond `runtime/surf/`) | game-arena |
+| dot-bot (nothing surf- or game-specific beyond `runtime/surf/`) | game-fatal-contact |
 | --- | --- |
 | `DotBotDemoSchema`, `DotBotDemoEpisode`, `DotBotDemoRecorder`, `DotBotDemoConfig`, the three stores, `DotBotRideHarvest`, ride choice in `DotBotSurfRide`, the suite sections on a toy simulator | the `ride` schema, `begin`/`sample`/`end` from the island tests it already has, the map id and version from its session, the store from its config, the arena's surf tuning in the simulator it hands over, `tools/surf_rides.tscn --harvest`, `headless_imported` riding a recorded edge |
 
@@ -155,16 +155,16 @@ Each piece is one repository, sized S (an hour or two of a builder, under 300 li
 | `demo-rec-core` | dot-bot | `DotBotDemoSchema`, `DotBotDemoEpisode`, `DotBotDemoRecorder` (begin/sample/end/cancel, include_fn, adaptive rate, queue, flush), `DotBotDemoConfig` + `bind_cvars`, `DotBotDemoStore` base and the memory store; suite sections: a fake host records, a bot is refused, the rate falls as the count rises, a full queue drops oldest | L | - |
 | `demo-rec-stores` | dot-bot | `DotBotDemoStoreJson`, `DotBotDemoStoreSql` (migration, batch insert, counts, prune), `from_config` loading dot-sql by path; offline suite on the JSON and recording driver, a live suite run by dot-sql's `tools/test_live.sh` on SQLite (Postgres and MariaDB where available, never `tmc_dev`) | M | `demo-rec-core` |
 | `demo-ride-harvest` | dot-bot | `DotBotRideHarvest` (quantise, pilot replay, keep or reject, score), `DotJob` scheduling with a frame budget, rides merged with source and success; ride choice among an edge's top rides in `DotBotSurfRide`; suite: a good toy ride kept, a bad one rejected, choice is seeded | M | `demo-rec-core` |
-| `arena-ride-recording` | game-arena | the `ride` schema and segmenting in `arena_surf.gd`, recorder and store from the game's config, recorded rides loaded with the planned cache, `tools/surf_rides.tscn --harvest` and `--demos`; `headless_imported` records simulated players' rides, harvests them and has a bot ride a recorded edge | L | `demo-rec-stores`, `demo-ride-harvest` |
+| `arena-ride-recording` | game-fatal-contact | the `ride` schema and segmenting in `arena_surf.gd`, recorder and store from the game's config, recorded rides loaded with the planned cache, `tools/surf_rides.tscn --harvest` and `--demos`; `headless_imported` records simulated players' rides, harvests them and has a bot ride a recorded edge | L | `demo-rec-stores`, `demo-ride-harvest` |
 | `deploy-demo-cfg` | dot-server-deploy | `cfg/bot_record.yml` documenting every key and the rules text, read into the game's `DotBotDemoConfig` by the host the way `replay.yml` is | S | `demo-rec-core` |
 | `demo-heatmap` | dot-bot | `DotBotDemoHeatmap` (kind `place`, grid, decay, minimum count) and a `waypoints_fn` weighting helper; suite | M | `demo-rec-stores` |
 | `demo-aim-stats` | dot-bot | `DotBotAimStats` (kind `engage`, percentile sketches, cheat floor, `suggest` onto `SPEC`) and a tool that prints a suggested preset table; suite | M | `demo-rec-stores` |
-| `arena-demo-stats` | game-arena | `place` and `engage` episodes from the arena's sight and hit events; roaming weighted by the heatmap; `headless_bots` still passes | M | `demo-heatmap`, `demo-aim-stats` |
+| `arena-demo-stats` | game-fatal-contact | `place` and `engage` episodes from the arena's sight and hit events; roaming weighted by the heatmap; `headless_bots` still passes | M | `demo-heatmap`, `demo-aim-stats` |
 | `npc-character-from-stats` | dot-npc-ai | `DotNpcAiCharacter.from_percentiles(dict)`, duck typed; suite | S | `demo-aim-stats` |
 | `bc-export` | dot-bot | `tools/demo_export.gd`: manifest and float32 shards, split by episode; suite reads a shard back | S | `demo-rec-stores` |
 | `bc-train` | dot-bot | `tools/bc/train.py` (PyTorch, MLP, DAgger hook), `.dotmlp` writer, run once on staging02 through `gpu.sh py` on a toy export | M | `bc-export` |
 | `bc-mlp-runtime` | dot-bot | `DotBotMlp` (load, schema check, allocation-free forward), a policy intent writer, the `bot_policy` cvar default off; suite: matches the trainer's output on fixed inputs to 1e-5, cost measured | M | `bc-train` |
 | `bc-eval-gate` | dot-bot | `tools/demo_eval.gd`: held-out starts, policy against baseline on a host's simulator, seeded, per-map verdict and report | M | `bc-mlp-runtime` |
-| `arena-bc-trial` | game-arena | the first cloned policy (rides or roaming), trained on recorded arena episodes, gated by `bc-eval-gate`; stays off unless the gate passes | L | `bc-eval-gate`, `arena-ride-recording` |
+| `arena-bc-trial` | game-fatal-contact | the first cloned policy (rides or roaming), trained on recorded arena episodes, gated by `bc-eval-gate`; stays off unless the gate passes | L | `bc-eval-gate`, `arena-ride-recording` |
 
 Stage 1 is the first five, and is `bot-recorded-rides-1`'s "done when". Stages 2 and 3 can start once `demo-rec-stores` lands and do not block it.

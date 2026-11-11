@@ -455,7 +455,7 @@ func _test_demo_off_and_privacy() -> void:
 
 
 # Toy simulator and host: dot-player-controller is not linked here, so the harvest is tested
-# through its duck-typed interface; game-arena's suite runs the real motor.
+# through its duck-typed interface; game-fatal-contact's suite runs the real motor.
 
 
 func _section(title: String) -> void:
